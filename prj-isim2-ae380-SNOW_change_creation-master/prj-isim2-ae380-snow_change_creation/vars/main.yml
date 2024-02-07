@@ -1,0 +1,54 @@
+---
+ae: ae380
+ae_description: snow-change-creation
+
+snow_change_creation_nexus_base_url: http://prsstn01.noe.edf.fr:10000/repository/automation-ae380/automation-ae380/
+snow_change_creation_temp_dest: /tmp/AE380/
+
+snow_mapping:
+    category:
+        "Exploitation applicative": ITO_Appli
+        "ITO Infra": ITO_Infra
+        "ITSUP Appli": ITSUP_Appli
+        "ITSUP Infra": ITSUP_Infra_R
+        "ITSUP Workplace/Utilisateurs": ITSUP_Workplace
+        "DTEAM": DTEAM
+        "Autre": Other
+    change_reason:
+        "Maintien en condition opérationnelle (MCO)": mco
+        "Eviter / Résoudre un incident": prevent_resolve_incident
+        "Sécurité": security
+        "Demande opérateur IT": it_request
+        "Demande métier": business_request
+    type:
+        "Normal": normal
+        "Standard": standard
+        "Urgent": emergency
+    insertion_en_exploitation:
+        "Sécurité renforcée": reinforced security
+        "Contrôle": control
+        "MEP directe": direct production
+        "Devops": devops
+        "REPEX / RETEX": repex/retex
+        "Sans REPEX / RETEX": without repex/retex
+
+report_csv_fields:
+      - change_u_type
+      - change_u_category
+      - change_u_insertion_en_exploitation
+      - change_u_category_element
+      - change_u_template_name
+      - change_u_requested_by
+      - change_u_cross_rfc
+      - change_u_business_service
+      - change_u_impact
+      - change_u_change_reason
+      - change_u_assignment_group
+      - change_u_chg_parent
+      - change_u_short_description
+      - change_u_description
+      - change_u_start_date
+      - change_u_end_date
+      - change_u_unavailability_expected_start
+      - change_u_unavailability_expected_end
+      - create_change_status

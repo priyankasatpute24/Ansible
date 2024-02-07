@@ -1,0 +1,187 @@
+- name: Block create change
+  block: 
+    - name: "Set fact type for current change: {{ change_to_create_index }}"
+      set_fact:
+        ae380: "{{ ae380|default({}) | combine({change_to_create_index:{'change_u_type': changes_from_xlsx['data'][change_to_create][0]['type']}}, recursive=True) }}"
+
+    - name: "Set fact category for current change: {{ change_to_create_index }}"
+      set_fact:
+        ae380: "{{ ae380|default({}) | combine({change_to_create_index:{'change_u_category': changes_from_xlsx['data'][change_to_create][0]['category']}}, recursive=True) }}"
+
+    - name: "Set fact insertion_en_exploitation for current change: {{ change_to_create_index }}"
+      set_fact:
+        ae380: "{{ ae380|default({}) | combine({change_to_create_index:{'change_u_insertion_en_exploitation': '' if changes_from_xlsx['data'][change_to_create][0]['insertion_en_exploitation'] is none else changes_from_xlsx['data'][change_to_create][0]['insertion_en_exploitation']}}, recursive=True) }}"
+
+    - name: "Set fact category_element for current change: {{ change_to_create_index }}"
+      set_fact:
+        ae380: "{{ ae380|default({}) | combine({change_to_create_index:{'change_u_category_element': changes_from_xlsx['data'][change_to_create][0]['category_element']}}, recursive=True) }}"
+
+    - name: "Set fact element for current change: {{ change_to_create_index }}"
+      set_fact:
+        ae380: "{{ ae380|default({}) | combine({change_to_create_index:{'change_u_template_name': changes_from_xlsx['data'][change_to_create][0]['element']}}, recursive=True) }}"
+
+    - name: "Set fact requested_by for current change: {{ change_to_create_index }}"
+      set_fact:
+        ae380: "{{ ae380|default({}) | combine({change_to_create_index:{'change_u_requested_by': changes_from_xlsx['data'][change_to_create][0]['requested_by']}}, recursive=True) }}"
+
+    - name: "Set fact check_box for current change: {{ change_to_create_index }}"
+      set_fact:
+        ae380: "{{ ae380|default({}) | combine({change_to_create_index:{'change_u_cross_rfc': changes_from_xlsx['data'][change_to_create][0]['check_box']}}, recursive=True) }}"
+
+    - name: "Set fact business_service for current change: {{ change_to_create_index }}"
+      set_fact:
+        ae380: "{{ ae380|default({}) | combine({change_to_create_index:{'change_u_business_service': changes_from_xlsx['data'][change_to_create][0]['business_service']}}, recursive=True) }}"
+
+    - name: "Set fact impact for current change: {{ change_to_create_index }}"
+      set_fact:
+        ae380: "{{ ae380|default({}) | combine({change_to_create_index:{'change_u_impact': changes_from_xlsx['data'][change_to_create][0]['impact']}}, recursive=True) }}"
+
+    - name: "Set fact change_reason for current change: {{ change_to_create_index }}"
+      set_fact:
+        ae380: "{{ ae380|default({}) | combine({change_to_create_index:{'change_u_change_reason': changes_from_xlsx['data'][change_to_create][0]['change_reason']}}, recursive=True) }}"
+
+    - name: "Set fact assignement_group for current change: {{ change_to_create_index }}"
+      set_fact:
+        ae380: "{{ ae380|default({}) | combine({change_to_create_index:{'change_u_assignment_group': changes_from_xlsx['data'][change_to_create][0]['assignement_group']}}, recursive=True) }}"
+
+    - name: "Set fact chg_parent for current change: {{ change_to_create_index }}"
+      set_fact:
+        ae380: "{{ ae380|default({}) | combine({change_to_create_index:{'change_u_chg_parent': changes_from_xlsx['data'][change_to_create][0]['chg_parent']}}, recursive=True) }}"
+
+    - name: "Set fact short_description for current change: {{ change_to_create_index }}"
+      set_fact:
+        ae380: "{{ ae380|default({}) | combine({change_to_create_index:{'change_u_short_description': changes_from_xlsx['data'][change_to_create][0]['short_description']}}, recursive=True) }}"
+
+    - name: "Set fact description for current change: {{ change_to_create_index }}"
+      set_fact:
+        ae380: "{{ ae380|default({}) | combine({change_to_create_index:{'change_u_description': changes_from_xlsx['data'][change_to_create][0]['description']}}, recursive=True) }}"
+
+    - name: "Set fact start_date for current change: {{ change_to_create_index }}"
+      set_fact:
+        ae380: "{{ ae380|default({}) | combine({change_to_create_index:{'change_u_start_date': changes_from_xlsx['data'][change_to_create][0]['start_date']}}, recursive=True) }}"
+
+    - name: "Set fact end_date for current change: {{ change_to_create_index }}"
+      set_fact:
+        ae380: "{{ ae380|default({}) | combine({change_to_create_index:{'change_u_end_date': changes_from_xlsx['data'][change_to_create][0]['end_date']}}, recursive=True) }}"
+
+    - name: "Set fact unavailability_expected_start for current change: {{ change_to_create_index }}"
+      set_fact:
+        ae380: "{{ ae380|default({}) | combine({change_to_create_index:{'change_u_unavailability_expected_start': changes_from_xlsx['data'][change_to_create][0]['unavailability_expected_start']}}, recursive=True) }}"
+
+    - name: "Set fact unavailability_expected_end for current change: {{ change_to_create_index }}"
+      set_fact:
+        ae380: "{{ ae380|default({}) | combine({change_to_create_index:{'change_u_unavailability_expected_end': changes_from_xlsx['data'][change_to_create][0]['unavailability_expected_end']}}, recursive=True) }}"
+
+    - name: "Set body for request of current change: {{ change_to_create_index }}"
+      set_fact:
+        request_body_insertion_en_exploitation:
+          u_type: "{{ snow_mapping['type'][changes_from_xlsx['data'][change_to_create][0]['type']] }}"
+          u_category: "{{ snow_mapping['category'][changes_from_xlsx['data'][change_to_create][0]['category']] }}"
+          u_insertion_en_exploitation: "{{ snow_mapping['insertion_en_exploitation'][changes_from_xlsx['data'][change_to_create][0]['insertion_en_exploitation']] }}"
+          u_correlation_id: "{{ '{}{}'.format(snow_username,lookup('pipe', 'date +%Y-%m-%d-%H-%M-%S')) }}"
+          u_template_name: "{{ changes_from_xlsx['data'][change_to_create][0]['category_element'] }}"
+          u_requested_by: "{{ (changes_from_xlsx['data'][change_to_create][0]['requested_by']).split('(')[1].split(')')[0] | default(snow_username) }}"
+          u_cross_rfc: "{{ 'true' if changes_from_xlsx['data'][change_to_create][0]['check_box'] == 'CHG transverse' else 'false' }}"
+          u_business_service: "{{ changes_from_xlsx['data'][change_to_create][0]['business_service'] }}"
+          u_impact: "{{ changes_from_xlsx['data'][change_to_create][0]['impact'] | first }}"
+          u_change_reason: "{{ snow_mapping['change_reason'][changes_from_xlsx['data'][change_to_create][0]['change_reason']] }}"
+          u_assignment_group: "{{ changes_from_xlsx['data'][change_to_create][0]['assignement_group'] }}"
+          u_chg_parent: "{{ changes_from_xlsx['data'][change_to_create][0]['chg_parent'] }}"
+          u_short_description: "{{ changes_from_xlsx['data'][change_to_create][0]['short_description'] }}"
+          u_description: "{{ changes_from_xlsx['data'][change_to_create][0]['description'] }}"
+          u_start_date: "{{ changes_from_xlsx['data'][change_to_create][0]['start_date'] | to_datetime('%d/%m/%Y %H:%M:%S') }}"
+          u_end_date: "{{ changes_from_xlsx['data'][change_to_create][0]['end_date'] | to_datetime('%d/%m/%Y %H:%M:%S') }}"
+          u_unavailability_expected_start: "{{ changes_from_xlsx['data'][change_to_create][0]['unavailability_expected_start'] | to_datetime('%d/%m/%Y %H:%M:%S') }}"
+          u_unavailability_expected_end: "{{ changes_from_xlsx['data'][change_to_create][0]['unavailability_expected_end'] | to_datetime('%d/%m/%Y %H:%M:%S') }}"
+      when: changes_from_xlsx['data'][change_to_create][0]['insertion_en_exploitation'] is not none
+
+    - name: "Set body for request of current change: {{ change_to_create_index }}"
+      set_fact:
+        request_body:
+          u_type: "{{ snow_mapping['type'][changes_from_xlsx['data'][change_to_create][0]['type']] }}"
+          u_category: "{{ snow_mapping['category'][changes_from_xlsx['data'][change_to_create][0]['category']] }}"
+          u_correlation_id: "{{ '{}{}'.format(snow_username,lookup('pipe', 'date +%Y-%m-%d-%H-%M-%S')) }}"
+          u_template_name: "{{ changes_from_xlsx['data'][change_to_create][0]['category_element'] }}"
+          u_requested_by: "{{ (changes_from_xlsx['data'][change_to_create][0]['requested_by']).split('(')[1].split(')')[0] | default(snow_username) }}"
+          u_cross_rfc: "{{ 'true' if changes_from_xlsx['data'][change_to_create][0]['check_box'] == 'CHG transverse' else 'false' }}"
+          u_business_service: "{{ changes_from_xlsx['data'][change_to_create][0]['business_service'] }}"
+          u_impact: "{{ changes_from_xlsx['data'][change_to_create][0]['impact'] | first }}"
+          u_change_reason: "{{ snow_mapping['change_reason'][changes_from_xlsx['data'][change_to_create][0]['change_reason']] }}"
+          u_assignment_group: "{{ changes_from_xlsx['data'][change_to_create][0]['assignement_group'] }}"
+          u_chg_parent: "{{ changes_from_xlsx['data'][change_to_create][0]['chg_parent'] }}"
+          u_short_description: "{{ changes_from_xlsx['data'][change_to_create][0]['short_description'] }}"
+          u_description: "{{ changes_from_xlsx['data'][change_to_create][0]['description'] }}"
+          u_start_date: "{{ changes_from_xlsx['data'][change_to_create][0]['start_date'] | to_datetime('%d/%m/%Y %H:%M:%S') }}"
+          u_end_date: "{{ changes_from_xlsx['data'][change_to_create][0]['end_date'] | to_datetime('%d/%m/%Y %H:%M:%S') }}"
+          u_unavailability_expected_start: "{{ changes_from_xlsx['data'][change_to_create][0]['unavailability_expected_start'] | to_datetime('%d/%m/%Y %H:%M:%S') }}"
+          u_unavailability_expected_end: "{{ changes_from_xlsx['data'][change_to_create][0]['unavailability_expected_end'] | to_datetime('%d/%m/%Y %H:%M:%S') }}"
+      when: changes_from_xlsx['data'][change_to_create][0]['insertion_en_exploitation'] is none
+
+    - name: Call snow module to Create change
+      servicenow.itsm.change_request: 
+        instance:
+          client_id: "{{ snow_client_id }}"
+          client_secret: "{{ snow_client_secret }}"
+          username: "{{ snow_username }}"
+          password: "{{ snow_password }}"
+          host: "{{ snow_host }}"
+          timeout: 20
+          grant_type: password
+        state: new
+        type: "{{ snow_mapping['type'][changes_from_xlsx['data'][change_to_create][0]['type']] }}"
+        requested_by: "{{ (changes_from_xlsx['data'][change_to_create][0]['requested_by']).split('(')[1].split(')')[0] | default(snow_username) }}"
+        assignment_group: "{{ changes_from_xlsx['data'][change_to_create][0]['assignement_group'] }}"
+        short_description: "{{ changes_from_xlsx['data'][change_to_create][0]['short_description'] }}"
+        description: "{{ changes_from_xlsx['data'][change_to_create][0]['description'] }}"
+        other: "{{ request_body_insertion_en_exploitation if changes_from_xlsx['data'][change_to_create][0]['insertion_en_exploitation'] is not none else request_body }}"
+      register: snow_return
+      environment:
+        HTTPS_PROXY: "{{ snow_proxy }}"
+        PYTHONHTTPSVERIFY: 0
+
+    - name: Call snow module to retrieve change number
+      servicenow.itsm.change_request_info: 
+        instance:
+          client_id: "{{ snow_client_id }}"
+          client_secret: "{{ snow_client_secret }}"
+          username: "{{ snow_username }}"
+          password: "{{ snow_password }}"
+          host: "{{ snow_host }}"
+          timeout: 20
+          grant_type: password
+        query: 
+          - sys_id: "= {{ snow_return['record']['sys_target_sys_id'] }}"
+      register: snow_second_return
+      environment:
+        HTTPS_PROXY: "{{ snow_proxy }}"
+        PYTHONHTTPSVERIFY: 0
+      when: snow_return is not none and snow_return['record']['sys_import_state'] not in 'error'
+
+    - name: "Set change name for current change: {{ change_to_create_index }}"
+      set_fact:
+        change_nb: "OK: {{ snow_second_return['records'][0]['number'] | default('Could not retrieve change number') }}"
+      when: snow_return is not none and snow_return['record']['sys_import_state'] not in 'error'
+
+    - name: "Set fact create_change_status for current change: {{ change_to_create_index }}"
+      set_fact:
+        ae380: "{{ ae380|default({}) | combine({change_to_create_index:{'create_change_status': change_nb }}, recursive=True) }}"
+      when: snow_return is not none and snow_return['record']['sys_import_state'] not in 'error'
+
+    - name: "Set error for current change: {{ change_to_create_index }}"
+      set_fact:
+        error: "KO: {{ snow_return['record']['sys_import_state_comment'] | default('Could not create change') }}"
+      when: snow_return is none or snow_return['record']['sys_import_state'] in 'error'
+
+    - name: "Set fact create_change_status for current change: {{ change_to_create_index }}"
+      set_fact:
+        ae380: "{{ ae380|default({}) | combine({change_to_create_index:{'create_change_status': error }}, recursive=True) }}"
+      when: snow_return is none or snow_return['record']['sys_import_state'] in 'error'
+
+  rescue:
+    - name: "Set error for current change: {{ change_to_create_index }}"
+      set_fact:
+        error: "KO: {{ snow_return.msg | default(snow_return['record']['sys_import_state_comment'] | default('Could not create change')) }}"
+
+    - name: "Set fact create_change_status for current change: {{ change_to_create_index }}"
+      set_fact:
+        ae380: "{{ ae380|default({}) | combine({change_to_create_index:{'create_change_status': error }}, recursive=True) }}"

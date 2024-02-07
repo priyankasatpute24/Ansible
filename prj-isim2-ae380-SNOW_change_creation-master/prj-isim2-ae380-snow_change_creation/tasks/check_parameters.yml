@@ -1,0 +1,14 @@
+---
+- name: Check for required parameters
+  assert:
+    that:
+    - snow_change_creation_xlsx_file_name is defined
+    fail_msg: "Required parameters are missing."
+
+- name: Check temp path exists
+  file:
+    path: "{{ snow_change_creation_temp_dest }}"
+    state: directory
+    mode: '0755'
+    owner: awx
+    group: awx

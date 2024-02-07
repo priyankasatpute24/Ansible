@@ -1,0 +1,88 @@
+- hosts: localhost
+  gather_facts: yes
+  vars_files:
+    - vars/main.yml
+
+  tasks:
+    - name: Check parameters
+      include_tasks: "tasks/check_parameters.yml"
+      run_once: yes
+
+    - name: Set ae380 fact
+      set_fact:
+        ae380: {}
+
+    - name: Generate temp XLSX file name
+      set_fact:
+        snow_change_creation_xlsx_file_name_temp: "{{ ansible_date_time.iso8601_basic }}_{{ snow_change_creation_xlsx_file_name }}"
+      run_once: true
+
+#    - name: Download XLSX file containing SNOW changes to create from Nexus
+#      include_role:
+#        name: interface_nexus
+#        tasks_from: download_package
+#      vars:
+#        int_nexus_download_url: "{{ snow_change_creation_nexus_base_url }}{{ snow_change_creation_xlsx_file_name | urlencode }}"
+#        int_nexus_download_destination: "{{ snow_change_creation_temp_dest }}{{ snow_change_creation_xlsx_file_name_temp }}"
+
+    - name: Read XLSX file containing SNOW changes
+      changes_xlsx_reader:
+#        src: "{{ snow_change_creation_temp_dest }}{{ snow_change_creation_xlsx_file_name_temp }}"
+        src: "{{ snow_change_creation_temp_dest }}{{ snow_change_creation_xlsx_file_name }}"
+      register: changes_from_xlsx
+
+    - name: Loop on results
+      include_tasks: ./tasks/create_change.yml
+      loop: "{{ changes_from_xlsx['data'] | list }}"
+      loop_control:
+        loop_var: change_to_create
+        index_var: change_to_create_index
+
+    - name: Delete temp XLSX file
+      file:
+        path: "{{ snow_change_creation_xlsx_file_name_temp }}"
+        state: absent
+
+    - name: Set regex facts
+      set_fact:
+        regex_ok: create_change_status(.){5}OK
+        regex_ko: create_change_status(.){5}KO
+
+    - name: Count OK/KO
+      block:
+        - name: Set counts
+          set_fact:
+            test: "{{ (hostvars[item][ae] | string) }}"
+            count_OK: "{{ (count_OK|default(0))|int + (hostvars[item][ae] | string | regex_findall(regex_ok) | length | int)  }}"
+            count_KO: "{{ (count_KO|default(0))|int + (hostvars[item][ae] | string | regex_findall(regex_ko) | length | int)  }}"
+          loop: "{{ ansible_play_hosts_all }}"
+
+    - name: Block create report
+      block:
+        - name: Create report
+          include_tasks: "tasks/report_creator.yml"
+
+        - name: Send mail
+          import_role: 
+            name: rol-capg-mailstd
+          vars:
+            mailstd_type: REPORT
+            mailstd_smtpSubject: "[{{ ae | upper }}] Création de changes SNOW - Résultats d'exécution"
+            mailstd_smtpSecure: never
+            mailstd_smtpTo: "{{ use_case_report_email }}"
+            mailstd_smtpBody: |
+                        Bonjour,
+                        le cas d'usage a été exécuté pour la création de {{ changes_from_xlsx['data'] | list | length }} changes.
+                        OK: {{ count_OK }}
+                        KO: {{ count_KO }}
+                        le fichier résultat est accessible sur le partage: <a href="{{ report_url }}">Rapport d'exécution</a>
+
+                        Cordialement;
+                        Equipe Automation.
+            mailstd_listKeyInputUsecase: Nom du fichier traité
+            mailstd_listValInputUsecase: "{{ snow_change_creation_xlsx_file_name }}"
+
+      rescue:
+        - debug:
+            msg: "Report creation failed."
+

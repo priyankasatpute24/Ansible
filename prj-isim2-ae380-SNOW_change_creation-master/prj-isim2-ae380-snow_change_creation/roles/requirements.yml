@@ -1,0 +1,8 @@
+- src: https://no2yyn06.noe.edf.fr:443/git_automation/PRJ-ISIM-INTERFACE-Nexus_Repository_Manager.git
+  scm: git
+  name: interface_nexus
+
+- src: https://no2yyn06.noe.edf.fr:443/git_automation/rol-capg-mailstd.git
+  scm: git
+  version: master
+  name: rol-capg-mailstd
